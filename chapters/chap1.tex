@@ -1,3 +1,184 @@
-\chapter{Chapter 1}
+% --- chapters/chap1.tex ---
+% Dieses Dokument enthält nur den Inhalt von Kapitel 1
+% Alle Pakete (\usepackage) werden in der main.tex geladen.
 
-\section{Sektion 1}
+\chapter{Motivation und Grundlagen von Datenbanken}
+
+\section{Motivation: Warum Datenbanken?}
+
+Daten können in einer Textdatei gespeichert werden. Wird dies getan, gibt es einige Vor- und Nachteile, die in Tabelle \ref{tab:textdatei_vorteile_nachteile} gegenübergestellt sind.
+
+% --- Optimierte Tabelle ---
+% \begin{table}[htbp] ... \end{table} sorgt dafür, dass die Tabelle "floated"
+% und eine Caption (Titel) sowie ein Label (für Verweise) bekommen kann.
+\begin{table}[htbp] % [htbp] = here, top, bottom, page (Positionierungs-Hinweis)
+    \centering
+    \caption{Vor- und Nachteile der Datenspeicherung in reinen Textdateien}
+    \label{tab:textdatei_vorteile_nachteile}
+    
+    % Stellen Sie sicher, dass das Paket 'tabularx' in main.tex oder style.sty geladen wird!
+    \begin{tabularx}{\textwidth}{XX} 
+        \toprule 
+        \textbf{Vorteile} & \textbf{Nachteile} \\
+        \midrule
+        
+        % --- LÖSUNG: 'itemize' in 'minipage' packen ---
+        % [t] sorgt für die bündige Ausrichtung an der Oberkante.
+        % \linewidth bezieht sich auf die Breite der 'X'-Spalte.
+        \begin{minipage}[t]{\linewidth}
+            \begin{itemize}
+                % Optional: Verringert den Abstand zw. Listeneinträgen
+                \setlength{\itemsep}{-0.5ex} 
+                \item Einfach verfügbar und verständlich
+                \item Einfach zugreifbar, portabel
+                \item Wenig Overhead-Daten
+                \item Große Kontrolle über die Struktur (Exportierbarkeit)
+                \item Keine (DBMS-spezifischen) Fehlermeldungen
+            \end{itemize}
+        \end{minipage} & % Tabellen-Spaltentrenner
+        
+        \begin{minipage}[t]{\linewidth}
+            \begin{itemize}
+                % Optional: Verringert den Abstand zw. Listeneinträgen
+                \setlength{\itemsep}{-0.5ex}
+                \item Unstrukturierte Daten (z.B. 70 Schauspieler in einer Spalte)
+                \item Analysemethoden stark eingeschränkt
+                \item Änderungen an gleichen Daten schwierig
+                \item Keine Integritätssicherung (z.B. Datum "35.12.2017" möglich)
+                \item Keine Datenkontrolle oder Typisierung
+                \item Kein Mehrbenutzerbetrieb (Concurrent Access)
+            \end{itemize}
+        \end{minipage} \\ % Zeilenende
+        
+        \bottomrule 
+    \end{tabularx}
+\end{table}
+
+\section{Historische Entwicklung von Datenbanken}
+
+% --- Platzhalter für Abbildung (Folie 5) ---
+% Die 'figure'-Umgebung ist der Standardweg, um Bilder einzufügen.
+% Sie erlaubt \centering, \caption (Bildunterschrift) und \label (Verweis).
+\begin{figure}[htbp]
+    \centering
+    % Ersetzen Sie die 'fbox' durch Ihren \includegraphics-Befehl
+    % \includegraphics[width=0.8\textwidth]{pfad/zu/bild_folie_5.png}
+    
+    % Sichtbarer Platzhalter:
+    \fbox{\parbox{0.8\textwidth}{\centering \vspace{5cm} Platzhalter: \\ Bild von Folie 5 hier einfügen \vspace{5cm}}}
+    \caption{Entwicklungsschritt 1: Dateiverwaltungssystem (vgl. Folie 5)}
+    \label{fig:folie5}
+\end{figure}
+
+Die Nachteile von einer einfachen Textdatei sind offensichtlich. Aus diesem Grund wurde Ende der 60er Jahre ein Dateiverwaltungssystem eingeführt. Hierdurch waren Datenbanken zwar geräteunabhängig, allerdings gab es keinen Schutz vor Redundanz und Inkonsistenz.
+
+% --- Platzhalter für Abbildung (Folie 6) ---
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{pfad/zu/bild_folie_6.png}
+    \fbox{\parbox{0.8\textwidth}{\centering \vspace{5cm} Platzhalter: \\ Bild von Folie 6 hier einfügen \vspace{5cm}}}
+    \caption{Entwicklungsschritt 2: Datenbankmanagementsystem (DBMS) (vgl. Folie 6)}
+    \label{fig:folie6}
+\end{figure}
+
+Aus diesem Grund wurde über die gesamte Datenbank ein Datenbankmanagementsystem (DBMS) eingebaut.
+Daten und Metadaten sind auf der Datenbank gespeichert. Das Datenbankmanagementsystem ist softwarebasiert und liegt auf einem Server.
+
+% Besser als \subsection* ist ein \subsection mit klarem Titel
+\subsection{Moderne Architekturen (Nicht klausurrelevant)}
+
+% --- Platzhalter für Abbildung (Folie 7) ---
+\begin{figure}[htbp]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{pfad/zu/bild_folie_7.png}
+    \fbox{\parbox{0.8\textwidth}{\centering \vspace{5cm} Platzhalter: \\ Bild von Folie 7 hier einfügen \vspace{5cm}}}
+    \caption{Moderne Datenbankarchitekturen (vgl. Folie 7)}
+    \label{fig:folie7}
+\end{figure}
+
+Es gibt mehrere Datenbanken mit jeweils einem eigenen Datenbankmanagementsystem, welche über eine Cloud oder On-Premise-Systemen verbunden sind.
+Die Anwendungen kommunizieren dann nicht direkt mit der Datenbank, sondern mit diesen Schnittstellen bzw. "Datentöpfen". Die Datentöpfe müssen keine 
+konsistenten Daten haben. Unter Umständen können andere Datenbanken (wie z.B. Cassandra) zwischen den Datenbanken und den Schnittstellen geschaltet werden, 
+um die Geschwindigkeit zu erhöhen.
+
+\section{Grundlegende Merkmale von Datenbanken}
+
+Daten werden in einer Datenbank in einem \textbf{logischen Datenmodell} und mit einem \textbf{Datenschema} gespeichert. Es stehen \textbf{Operationen zur Datenmanipulation} zur Verfügung.
+
+Wichtige Merkmale von Daten in einem DBMS sind:
+% --- 'itemize' ist besser als ein reiner Fließtext ---
+\begin{itemize}
+    \item \textbf{Persistenz}: Daten bleiben dauerhaft gespeichert.
+    \item \textbf{Konsistenz}: Daten sind in sich widerspruchsfrei.
+    \item \textbf{Effizienz}: Schneller Zugriff und effiziente Speicherung.
+\end{itemize}
+
+\section{Aufgaben eines DBMS nach Codd}
+
+Um die Funktionalität zu gewährleisten, haben sich im Laufe der Jahre Basisfunktionen herausgestellt, welche von einem DBMS erfüllt sein müssen.
+
+\subsection{Datenintegration}
+
+Es wird ein \textbf{logisches Datenmodell} benutzt, um den Inhalt der Datenintegration für verschiedene
+Anwendungen zu beschreiben und zu kommunizieren.
+
+Es gibt einige verschiedene Datenmodelle:
+
+\subsubsection{Hierarchisches Modell}
+
+% --- Korrekte 'figure'-Umgebung für das Bild ---
+\begin{figure}[htbp]
+    \centering
+    % Stellen Sie sicher, dass der Pfad 'chap1/...' von der main.tex aus stimmt!
+    % Ggf. muss der Pfad 'chapters/chap1/hierarchisches_modell.png' lauten.
+    \includegraphics[width=0.7\textwidth]{chap1/hierarchisches_modell.png}
+    \caption{Beispiel eines hierarchischen Datenmodells}
+    \label{fig:hierarchisches_modell}
+\end{figure}
+
+Dieses Modell ist vergleichbar mit einem Baum. Es sind nur einfache 1:n-Beziehungen möglich.
+
+% --- Korrigierte Hierarchie: \subsubsection statt \subsection ---
+\subsubsection{Netzwerkmodell}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{chap1/netzwerkmodell.png}
+    \caption{Beispiel eines Netzwerkmodells}
+    \label{fig:netzwerkmodell}
+\end{figure}
+
+Es ist keine strenge Hierarchie erforderlich. Es sind auch komplexe n:m-Beziehungen erlaubt.
+
+\subsubsection{Relationales Modell}
+
+Objekte und Beziehungen werden in Tabellen modelliert. Informationen in den Tabellen können mit Operationen 
+ausgewertet werden.
+
+\subsubsection{XML-Modell}
+
+Objekte und Beziehungen werden in einer Baumstruktur modelliert. Diese kann durch Schemata beschrieben werden.
+
+\subsubsection{Objektorientiertes Modell}
+
+Daten und Funktionen werden in einem Objekt gespeichert. Selten in der Praxis genutzt.
+
+\subsection{Operationen und Anfragesprachen}
+
+Operationen und Abfragesprachen werden zur Datenverarbeitung verwendet und müssen auf reale Daten mit 
+mehreren Milliarden Zeilen und Tausenden Tabellen anwendbar sein. Der Standard für relationale Datenbanken ist SQL.
+
+% --- Leere Sektionen als Platzhalter belassen ---
+% TODO: Diese Abschnitte müssen noch mit Inhalt gefüllt werden.
+\subsection{Datenkatalog}
+\subsection{Benutzersichten}
+\subsection{Konsistenz}
+\subsection{Zugriffskontrolle}
+\subsection{Transaktionskonzept}
+\subsection{Synchronisation}
+\subsection{Datensicherung}
+
+\section{DBMS im Software Stack}
+% TODO: Dieser Abschnitt muss noch mit Inhalt gefüllt werden.
+
+% \clearpage % \include fügt automatisch ein \clearpage am Ende ein.

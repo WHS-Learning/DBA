@@ -5,17 +5,11 @@
 \usepackage[ngerman]{babel}
 \usepackage{config/style}
 \usepackage{config/code}
-\usepackage{glossaries}
-\usepackage{biblatex}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, chains, decorations.pathmorphing, patterns}
-
-\addbibresource{references.bib}
-
-\makeglossaries
 
 \begin{document}
 
@@ -39,6 +33,9 @@
     \part{Semesterzusammenfassung}
 
     \include{chapters/chap1}
+    \include{chapters/chap2}
+    \include{chapters/chap3}
+    \include{chapters/chap4}
 
     \clearpage
     \pagestyle{empty}
@@ -46,9 +43,5 @@
     \setcounter{page}{1}
 
     \phantomsection
-    \addcontentsline{toc}{chapter}{Bibliography}
-    \printbibliography
-
-    \include{appendices} % Anhänge
 
 \end{document}

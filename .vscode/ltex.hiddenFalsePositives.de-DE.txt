@@ -1,0 +1,2 @@
+{"rule":"GERMAN_SPELLER_RULE","sentence":"^\\QAufgaben eines DBMS nach Codd.\\E$"}
+{"rule":"DOPPELTE_SATZZEICHEN","sentence":"^\\QMotivation: Warum Datenbanken?.\\E$"}

@@ -1,0 +1,278 @@
+% --- chapters/chap_entwurf.tex ---
+% Dieses Dokument enthält nur den Inhalt des Kapitels "Datenbankentwurf"
+
+\chapter{Datenbankentwurf}
+
+\section{Datenbankentwurf Phasenmodell}
+
+\subsection{Vorbereitung}
+
+Zuallererst müssen sich einige Fragen gestellt werden. Die zentrale Frage ist: \textit{Welche Daten müssen gespeichert werden?}
+Darüber hinaus sind weitere Überlegungen wichtig:
+\begin{itemize}
+    \item Wie sieht die Kosten-Nutzen-Analyse der Planung aus?
+    \item Daten sollten möglichst effizient gespeichert werden.
+    \item Es sollten nur notwendige Daten gespeichert werden (keine Redundanzen).
+    \item Das Datenmodell muss zur Anwendung passen.
+\end{itemize}
+
+\subsection{Phasenmodell}
+
+Das Phasenmodell beschreibt eine Abfolge von Entwurfsdokumenten. Jede Phase soll die existierenden Informationen erhalten bzw. konsistent zu den anderen Phasen sein.
+
+\subsubsection{Anforderungsanalyse}
+Anforderungen an den Endanwender (Kunden) werden gesammelt und analysiert. Das Fachproblem soll informell beschrieben werden.
+
+\subsubsection{Konzeptioneller Entwurf}
+Eine formale Beschreibung des Datenmodells. Es soll also ein ERM (Entity-Relationship-Modell) erstellt werden. Am Ende soll ein integriertes Datenmodell (Datenschema) entstehen.
+
+\subsubsection{Verteilungsentwurf}
+Dieser Schritt ist relevant, falls die Datenbank später auf mehreren Knoten (Servern) verteilt sein soll. (Wird hier nicht behandelt).
+
+\subsubsection{Logischer Entwurf}
+Transformation des konzeptionellen Entwurfs in die passende technische Beschreibung (Datenbankschema).
+
+\subsubsection{Datendefinition}
+Der noch systemunabhängige logische Entwurf wird in eine konkrete Deklaration mithilfe einer Datendefinitionssprache (DDL) überführt, z.B. mit SQL.
+
+Hier werden auch Integritätsbedingungen (wie Schlüssel, Fremdschlüssel, etc.) und Benutzersichten angelegt.
+
+\subsubsection{Physischer Entwurf}
+Entwurf der physischen Speicherstrukturen der Datenbank. Die Optimierung (z.B. Indizierung) erfolgt meist automatisch über das DBMS.
+
+\subsubsection{Implementierung und Wartung}
+Realisierung auf der Datenbank sowie die kontinuierliche Anpassung an neue Anforderungen und Updates.
+
+\section{Konzeptioneller Entwurf - Das Entity-Relationship-Modell (ERM)}
+
+Ein ERM soll die Daten der Datenbank auf einem hohem Abstraktions-Level beschreiben. Die Notation muss hierbei unabhängig von einem spezifischen DBMS sein.
+Ziele des ERM:
+\begin{itemize}
+    \item Kunden sollen einfach Anforderungen kommunizieren können.
+    \item Das Modell soll sich einfach in ein konkretes DBMS übertragen lassen.
+\end{itemize}
+
+\subsection{Darstellung}
+
+% --- Korrekte Figure-Umgebung ---
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{chap3/ERM.png}
+    \caption{Grundlegende Notation eines Entity-Relationship-Modells (ERM)}
+    \label{fig:erm_notation}
+\end{figure}
+
+Eine \textbf{Entität} ist ein Objekt in der realen Welt. Eine Menge gleichartiger Objekte wird zu einer \textbf{Entitätsmenge} zusammengefasst. Ein \textbf{Entitätstyp} wird in einem Rechteck dargestellt.
+
+Eine Entität kann ein oder mehrere \textbf{Attribute} haben. Ein Attribut wird durch eine Ellipse dargestellt und ist mit dem Entitätstypen verbunden. Zu jedem Attribut gehört eine Domäne, die die erlaubten Werte des Attributes beschreibt.
+
+\textbf{Beziehungen} zwischen zwei oder mehr Entitätstypen werden durch eine Raute dargestellt. Auch diese können Attribute besitzen.
+
+Eine Beziehung kann zwischen Entitäten des gleichen Entitätstyps bestehen (rekursive Beziehung). Genauso können mehrere unterschiedliche Beziehungen zwischen denselben zwei Entitätstypen existieren.
+
+Außerdem kann es \textbf{n-äre Beziehungen} geben, d.h. eine Beziehung kann zwischen beliebig vielen Entitätstypen existieren.
+
+\section{Schlüsselbeziehungen}
+
+Um Informationen zu verarbeiten, müssen einzelne Objekte (Entitäten) in diesen Mengen eindeutig identifizierbar sein.
+
+Entitäten können durch einzelne Attribute als auch durch eine Kombination mehrerer Attribute eindeutig identifiziert werden. Eine solche Teilmenge wird auch \textbf{Schlüssel} genannt.
+
+Eine \textbf{minimale} Menge an Attributen, über die eine Entität identifiziert werden kann, wird \textbf{Schlüsselkandidat} genannt. Handelt es sich nicht um eine minimale Menge, ist es ein \textbf{Superschlüssel}. Im ERM wird der Primärschlüssel meist durch Unterstreichen gekennzeichnet.
+
+\section{Kardinalitäten, Schwache Entitäten, IST-Beziehung}
+
+\subsection{Beziehungen}
+Beziehungen benutzen keine eigenen eindeutigen Schlüssel, stattdessen werden die Schlüssel der verknüpften Entitäten verwendet.
+
+In einem ERM werden Kardinalitäten (Multiplizitäten) oft durch ein \texttt{[min, max]}-Intervall an der Beziehung notiert.
+
+\subsubsection{Beispiel}
+
+% --- Korrekte Figure-Umgebung ---
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{chap3/ERP-beziehung.png}
+    \caption{Beispiel für Kardinalitäten in einem ERM}
+    \label{fig:erm_kardinalitaeten}
+\end{figure}
+
+Ein Regisseur arbeitet an 0 bis 10 Filmen (\texttt{[0, 10]}) und ein Film wird von mindestens einem und maximal 3 Regisseuren produziert (\texttt{[1, 3]}). Einem Genre sind beliebig viele Filme zugeordnet (\texttt{[0, n]}).
+
+\subsubsection{Schwache Entitäten}
+Schwache Entitäten (Weak Entities) besitzen keinen eigenen vollständigen Primärschlüssel. Stattdessen wird ihr identifizierendes Attribut (Partial Key) um den Primärschlüssel der "starken" Entität, von der sie abhängig sind, ergänzt.
+
+\subsection{IST-Beziehung (Generalisierung/Spezialisierung)}
+
+% --- Korrekte Figure-Umgebung ---
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{chap3/ist-beziehung.png}
+    \caption{Beispiel einer IST-Beziehung (Generalisierung)}
+    \label{fig:erm_ist_beziehung}
+\end{figure}
+
+Die IST-Beziehung (Generalisierung) ist keine eigene festgelegte Notation im Standard-ERM (nach Chen), wird aber oft so oder ähnlich (z.B. als Dreieck) dargestellt. Alle Filme und Serien "sind ein" Medium und besitzen einen Datensatz der Entität Medium. Dies kann später durch Fremdschlüssel modelliert werden.
+
+\section{Logischer Entwurf - Vom ERM zum Datenbankschema}
+In dieser Phase wird das konzeptionelle ERM systematisch in ein relationales Datenbankschema (eine Sammlung von Tabellendefinitionen) überführt.
+
+\section{Relationen und Tabellen}
+Eine Relation (im relationalen Modell) bzw. eine Tabelle (in SQL) besteht aus zwei Teilen:
+
+\subsection{Schema}
+Der Schemateil besteht aus der Beschreibung der Struktur: \\
+\textit{sch(Film) = (Film-ID, Titel, Genre)}
+
+Jedes Attribut besitzt außerdem eine Domäne: \textit{dom(Film-ID) = INTEGER}
+
+In der Datenbank gehören außerdem Schlüsselbeziehungen (Primary Key, Foreign Key) zum Schema.
+
+\subsection{Wert / Instanz}
+Als Wert oder Instanz \textit{val(Film)} der Relation bezeichnen wir die aktuelle Tupelmenge (Zeilen), die in der Tabelle enthalten ist.
+
+Eigenschaften einer Relation:
+\begin{itemize}
+    \item Die Reihenfolge der Tupel (Zeilen) ist nicht definiert.
+    \item Eine Relation kann nicht das gleiche Tupel mehrfach enthalten (Mengenlehre).
+    \item Die Attribute der Tupel können nur aus atomaren (unteilbaren) Werten bestehen (1. Normalform).
+\end{itemize}
+
+\section{Fremdschlüssel, Null-Werte, Informationskapazität}
+
+\subsection{Fremdschlüssel}
+Ein Fremdschlüssel verweist eindeutig auf einen Schlüsselkandidaten (meist den Primärschlüssel) einer anderen (oder derselben) Tabelle.
+
+Sie werden wie folgt definiert:
+\begin{lstlisting}[language=SQL, caption={Definition von Fremdschlüsseln}]
+CREATE TABLE spielt_in (
+    Film_ID INTEGER NOT NULL,
+    Splr_ID INTEGER NOT NULL,
+    Gehalt CHAR(15),
+    PRIMARY KEY (Film_ID, Splr_ID),
+    FOREIGN KEY (Film_ID) REFERENCES Film(Film_ID),
+    FOREIGN KEY (Splr_ID) REFERENCES Schauspieler(Splr_ID)
+);
+\end{lstlisting}
+
+\subsection{Null-Werte}
+Werte können auch \texttt{NULL} sein (unbekannt oder nicht vorhanden). Durch die Angabe von \texttt{NOT NULL} wird dies verboten. Ein \texttt{NULL}-Wert kennzeichnet, dass ein Wert nicht bekannt ist. Die Behandlung von \texttt{NULL}-Werten ist anwendungs- und systemspezifisch.
+
+\subsubsection{Bedeutungen von NULL}
+\begin{itemize}
+    \item \textbf{Wert existiert, aber ist nicht bekannt:} Das Gehalt eines Schauspielers.
+    \item \textbf{Kein Wert existiert (nicht zutreffend):} Ein Film ist auf einer Streaming-Plattform, oder eben nicht.
+    \item \textbf{Attribut ist nicht anwendbar:} In der Tabelle "Medium" (siehe IST-Beziehung) besitzt nur eine Serie Staffeln, ein Film jedoch nicht.
+\end{itemize}
+
+\subsubsection{Verhalten von NULL in SQL}
+\begin{itemize}
+    \item In arithmetischen Operationen ist das Ergebnis (fast) immer \texttt{NULL}. (z.B. \texttt{0 + NULL = NULL})
+    \item In Vergleichen ist das Ergebnis (fast) immer \texttt{NULL} (unbekannt), nicht \texttt{TRUE} or \texttt{FALSE}. (z.B. \texttt{(Dauer < NULL) = NULL})
+    \item In der Logik (mit \texttt{AND}, \texttt{OR}, \texttt{NOT}) ist das Ergebnis nicht immer \texttt{NULL}. (z.B. \texttt{TRUE OR NULL = TRUE})
+\end{itemize}
+
+\subsection{Informationskapazität}
+Welche Möglichkeiten für Primärschlüssel gibt es und wie wirken sie sich aus?
+
+\noindent Beispiel 1:
+\begin{tabular}{cc}
+\toprule
+Film-ID & Reg-ID \\
+\midrule
+4 & 1 \\
+3 & 3 \\
+\bottomrule
+\end{tabular}
+\begin{enumerate}
+    \item Nur FilmID: Filme können nur noch einen Regisseur haben. $\Rightarrow$ \textbf{Kapazitätsvermindernd}
+    \item FilmID, RegID: \textbf{Kapazitätserhaltend}
+\end{enumerate}
+
+\noindent Beispiel 2:
+\begin{tabular}{cll}
+\toprule
+Film-ID & Titel & Genre \\
+\midrule
+1 & Wonka & Family \\
+2 & Dune:Part Two & Action \\
+3 & Barbie & Comedy \\
+4 & Oppenheimer & Thriller \\
+5 & John Wick 4 & Thriller \\
+\bottomrule
+\end{tabular}
+\begin{enumerate}
+    \item Nur FilmID: \textbf{Kapazitätserhaltend}
+    \item FilmID und Genre: \textbf{Kapazitätserhöhend} (Ein Film könnte nun mit mehreren Genres existieren, z.B. (2, Dune, Action) und (2, Dune, Sci-Fi))
+\end{enumerate}
+
+Zwei Tabellen mit dem selben Schlüssel können zusammengelegt werden:
+
+\par\noindent
+\begin{tabular}{cll}
+\multicolumn{3}{l}{\textbf{Tabelle: Schauspieler}} \\
+\toprule
+Splr-ID & Vorname & Nachname \\
+\midrule
+1 & Zendaya & Coleman \\
+2 & Cillian & Murphy \\
+3 & Margot & Robbie \\
+4 & Timothee & Chalamet \\
+5 & Keanu & Reeves \\
+\bottomrule
+\end{tabular}
+\quad
+\begin{tabular}{ll}
+\multicolumn{2}{l}{\textbf{Tabelle: Geburtsdaten}} \\
+\toprule
+Splr-ID & Geburtsdatum \\
+\midrule
+1 & 1996-09-01 \\
+2 & 1976-05-25 \\
+3 & 1990-07-02 \\
+4 & 1995-12-27 \\
+5 & 1964-09-02 \\
+\bottomrule
+\end{tabular}
+
+\par\medskip\noindent
+Zusammengelegt zu \textbf{Tabelle: Schauspielerstammdaten}:
+\begin{tabular}{clll}
+\toprule
+Splr-ID & Vorname & Nachname & Geburtsdatum \\
+\midrule
+1 & Zendaya & Coleman & 1996-09-01 \\
+2 & Cillian & Murphy & 1976-05-25 \\
+3 & Margot & Robbie & 1990-07-02 \\
+4 & Timothee & Chalamet & 1995-12-27 \\
+5 & Keanu & Reeves & 1964-09-02 \\
+\bottomrule
+\end{tabular}
+
+
+\section{Abbilden von ERMs auf Tabellen}
+
+Bezogen auf die IST-Beziehung (Generalisierung) aus Abbildung \ref{fig:erm_ist_beziehung} gibt es mehrere Abbildungsstrategien:
+
+% --- Korrekte Figure-Umgebung (Wiederverwendung des Bildes) ---
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{chap3/ist-beziehung.png}
+    \caption{Abbildungsstrategien für eine IST-Beziehung}
+    \label{fig:erm_ist_beziehung_abbildung}
+\end{figure}
+
+% --- Description-Liste für die Strategien ---
+\begin{description}
+    \item[Horizontale Strategie] (Table per Subclass) \\
+    \texttt{Medium(MID, Titel, Genre)} \\
+    \texttt{Film(MID, Titel, Genre, Dauer)} \\
+    \texttt{Serie(MID, Titel, Genre, Staffeln, Folgen)}
+    \item[Vertikale Strategie] (Table per Subclass, nur eigene Attribute) \\
+    \texttt{Medium(MID, Titel, Genre)} \\
+    \texttt{Film(MID, Dauer)} \quad \textit{(mit FK (MID) auf Medium)} \\
+    \texttt{Serie(MID, Staffeln, Folgen)} \quad \textit{(mit FK (MID) auf Medium)}
+    \item[Nullwerte-Strategie] (Table per Hierarchy) \\
+    \texttt{Medium(MID, Titel, Genre, Dauer, Staffeln, Folgen, Typ)} \\
+    (Hier wären \texttt{Dauer} für Serien und \texttt{Staffeln/Folgen} für Filme \texttt{NULL})
+\end{description}

@@ -1,0 +1,296 @@
+% --- chapters/chap_algebra.tex ---
+% Dieses Dokument enthält nur den Inhalt des Kapitels "Die Relationale Algebra"
+
+\chapter{Die Relationale Algebra}
+
+\section{Die Relationale Algebra}
+
+Eine Algebra wird über einer Menge von Operanden und einer Operatorenmenge definiert.
+
+Die Operationen sind dabei abgeschlossen über der gegebenen Menge,
+d.h. die Anwendung eines Operators auf einem Element der Menge
+resultiert wieder in einem Element der Menge.
+
+\section{Operationen in der Relationalen Algebra}
+
+Die relationale Algebra basiert auf der Mengenlehre.
+Beispiele für Vereinigung ($\cup$), Schnitt ($\cap$) und Mengendifferenz ($\setminus$):
+Seien $A = \{(1,1), (1,3), (2,5)\}$ und $B = \{(1,1), (1,2), (3,1)\}$.
+\begin{itemize}
+    \item $A \cup B = \{(1,1), (1,2), (1,3), (2,5), (3,1) \}$
+    \item $A \cap B = \{(1,1)\}$
+    \item $A \setminus B = \{(1,3), (2,5)\}$
+\end{itemize}
+
+Für die Anwendung in der Relationalen Algebra müssen die Relationen (Tabellen) dasselbe Schema (Spaltennamen und -typen) besitzen.
+
+\par\medskip\noindent % \par\medskip erzeugt einen kleinen Abstand
+Nehmen wir an:
+% --- Hier beginnen die 'center' und 'tabular' Umgebungen statt ASCII-Art ---
+\begin{center}
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \textbf{Tabelle A:}
+        \begin{tabular}{ll}
+            \toprule
+            Film-ID & Titel \\
+            \midrule
+            1 & Wonka \\
+            2 & Dune 2 \\
+            4 & Oppenheimer \\
+            \bottomrule
+        \end{tabular}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \textbf{Tabelle B:}
+        \begin{tabular}{ll}
+            \toprule
+            Film-ID & Titel \\
+            \midrule
+            1 & Wonka \\
+            3 & Barbie \\
+            5 & John Wick 4 \\
+            \bottomrule
+        \end{tabular}
+    \end{minipage}
+\end{center}
+
+\begin{center}
+    \textbf{Tabelle C:}
+    \begin{tabular}{ll}
+        \toprule
+        Serien-ID & Titel \\
+        \midrule
+        1 & Euphoria \\
+        2 & Sherlock \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+Da die Schemata von A \& B identisch sind, können die
+Mengenoperationen auf diese Mengen angewendet werden.
+Das Schema von C unterscheidet sich von den anderen beiden, daher
+sind Mengenoperationen wie bspw. $A \cup C$ \textbf{undefiniert} (und NICHT die leere Menge).
+
+\par\medskip\noindent
+\textbf{Beispiel $A \cup B$:} (Für $A \cup B$ müssen A und B nicht disjunkt sein.)
+\begin{center}
+    \textbf{Tabelle $A \cup B$:}
+    \begin{tabular}{ll}
+        \toprule
+        Film-ID & Titel \\
+        \midrule
+        1 & Wonka \\
+        2 & Dune 2 \\
+        3 & Barbie \\
+        4 & Oppenheimer \\
+        5 & John Wick 4 \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\par\medskip\noindent
+\textbf{Beispiel $A \setminus B$:} (Für $A \setminus B$ muss B keine Teilmenge von A sein.)
+\begin{center}
+    \textbf{Tabelle $A \setminus B$:}
+    \begin{tabular}{ll}
+        \toprule
+        Film-ID & Titel \\
+        \midrule
+        2 & Dune 2 \\
+        4 & Oppenheimer \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\par\medskip\noindent
+\textbf{Beispiel $A \cap B$:}
+\begin{center}
+    \textbf{Tabelle $A \cap B$:}
+    \begin{tabular}{ll}
+        \toprule
+        Film-ID & Titel \\
+        \midrule
+        1 & Wonka \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\subsection{Selektion ($\sigma$)}
+
+Sei R eine Relation und $\phi$ (phi) eine beliebige Bedingung. Die Selektion $\sigma_{\phi}(R)$
+bildet R auf eine Teilmenge $R'$ ab, in der alle Tupel die Bedingung $\phi$
+erfüllen.
+
+\par\medskip\noindent
+Beispiel: Sei $R = \{(1, 1), (1, 2), (2, 1), (2, 2), (2, 3)\}$ und $sch(R) = (A, B)$.
+Dann ist $\sigma_{A>1}(R) = \{(2, 1), (2, 2), (2, 3)\}$.
+
+% --- Visuelle Darstellung der Operation (benötigt 'array' und 'amsmath' Pakete) ---
+\[ % Beginnt eine zentrierte, mathematische Umgebung
+\sigma_{\text{Dauer} < 120} \left(
+    \parbox{4cm}{\centering % Eine Box für die linke Tabelle
+    \begin{tabular}{lr}
+        \toprule
+        Titel & Dauer \\
+        \midrule
+        Wonka & 117 \\
+        Dune 2 & 166 \\
+        Barbie & 114 \\
+        Oppenheimer & 180 \\
+        John Wick 4 & 169 \\
+        \bottomrule
+    \end{tabular}}
+\right)
+=
+\parbox{4cm}{\centering % Eine Box für die rechte Tabelle
+\begin{tabular}{lr}
+    \toprule
+    Titel & Dauer \\
+    \midrule
+    Wonka & 117 \\
+    Barbie & 114 \\
+    \bottomrule
+\end{tabular}}
+\] % Ende der mathematischen Umgebung
+
+Die Bedingung $\phi$ ist ein boolescher Ausdruck aus folgenden Operanden und Operatoren:
+\begin{itemize}
+    \item Konstanten
+    \item Attribute
+    \item arithmetische Operatoren ($+$, $-$, $*$, \dots)
+    \item Vergleiche ($=$, $>$, $<$, \dots)
+    \item Boolesche Operatoren ($\vee$ (oder), $\wedge$ (und), $\neg$ (nicht))
+\end{itemize}
+$\phi$ wird für jedes Tupel einzeln ausgewertet.
+Es sind keine Quantoren ($\exists$, $\forall$) oder verschachtelte Algebraausdrücke
+erlaubt.
+
+\subsection{Projektion ($\pi$)}
+
+Sei R eine Relation und L eine Attributsliste. Die Projektion $\pi_{L}(R)$ bildet
+R auf eine Relation $R'$ ab, in der alle Tupel aus R enthalten sind, bei denen die
+Attribute, die nicht in L sind, jeweils entfernt wurden.
+
+\par\medskip\noindent
+Beispiel:
+Sei $R = \{(1, 1, 1), (1, 2, 3), (2, 2, 2), (3, 3, 3)\}$ und $sch(R) = (A, B, C)$.
+Dann ist $\pi_{A,C} (R) = \{(1, 1), (1, 3), (2, 2), (3, 3)\}$.
+\begin{itemize}
+    \item $\pi$ kann auch dazu genutzt werden, die Spalten einer Tabelle neu zu sortieren.
+    \item Intuitiv: $\sigma$ entfernt Zeilen, $\pi$ entfernt Spalten.
+\end{itemize}
+Durch die Projektion kann sich die Anzahl der Zeilen in der Tabelle ändern (Duplikate werden entfernt).
+
+\subsection{Das kartesische Produkt ($\times$)}
+
+Das kartesische Produkt $R \times S$ kombiniert jedes Tupel aus R mit jedem Tupel aus S.
+
+\par\medskip\noindent
+\textbf{Beispiel:}
+\begin{center}
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \textbf{Relation R:}
+        \begin{tabular}{cc}
+            \toprule A & B \\ \midrule 1 & 1 \\ \bottomrule
+        \end{tabular}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \textbf{Relation S:}
+        \begin{tabular}{cc}
+            \toprule C & D \\ \midrule 4 & 4 \\ 4 & 5 \\ \bottomrule
+        \end{tabular}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\textwidth}
+        \centering
+        \textbf{Relation T:}
+        \begin{tabular}{c}
+            \toprule E \\ \midrule 8 \\ 9 \\ \bottomrule
+        \end{tabular}
+    \end{minipage}
+\end{center}
+
+\begin{center}
+    \textbf{Relation $R \times S$:}
+    \begin{tabular}{cccc}
+        \toprule
+        A & B & C & D \\
+        \midrule
+        1 & 1 & 4 & 4 \\
+        1 & 1 & 4 & 5 \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \textbf{Relation $(R \times S) \times T$:}
+    \begin{tabular}{ccccc}
+        \toprule
+        A & B & C & D & E \\
+        \midrule
+        1 & 1 & 4 & 4 & 8 \\
+        1 & 1 & 4 & 5 & 8 \\
+        1 & 1 & 4 & 4 & 9 \\
+        1 & 1 & 4 & 5 & 9 \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\subsection{Umbenennung ($\beta$)}
+
+Seien A und B Attribute und R eine Relation. Die Umbenennung $\beta_{B \leftarrow A}(R)$
+(beta) benennt die Spalte A in R in B um.
+
+% --- Visuelle Darstellung der Operation ---
+\[
+\beta_{\text{ID} \leftarrow \text{Film-ID}} \left(
+    \parbox{5cm}{\centering
+    \begin{tabular}{ll}
+        \toprule
+        Film-ID & Titel \\
+        \midrule
+        1 & Wonka \\
+        2 & Dune 2 \\
+        3 & Barbie \\
+        4 & Oppenheimer \\
+        5 & John Wick 4 \\
+        \bottomrule
+    \end{tabular}}
+\right)
+=
+\parbox{5cm}{\centering
+\begin{tabular}{ll}
+    \toprule
+    ID & Titel \\
+    \midrule
+    1 & Wonka \\
+    2 & Dune 2 \\
+    3 & Barbie \\
+    4 & Oppenheimer \\
+    5 & John Wick 4 \\
+    \bottomrule
+\end{tabular}}
+\]
+
+\section{Rechengesetze und Eigenschaften}
+
+Das kartesische Produkt ist assoziativ:
+\[ R \times (S \times T) \equiv (R \times S) \times T \]
+
+Das kartesische Produkt ist nicht kommutativ. (Außer in Kombination mit
+einer Projektion, die die Spalten neu sortiert):
+\[ \pi_{L}(R \times S) \equiv \pi_{L}(S \times R) \]
+
+Außerdem gilt: Gegeben $\sigma_{\phi}$ enthält nur Attribute von R, dann:
+\[ \sigma_{\phi}(R \times S) \equiv \sigma_{\phi}(R) \times S \]
+
+\section{Join-Operationen}
+% TODO: Inhalt
+\section{Anfragebäume und Anfrageoptimierung (kurz)}
+% TODO: Inhalt
